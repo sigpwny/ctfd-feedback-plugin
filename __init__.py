@@ -1,14 +1,30 @@
 from flask_restx import Namespace, Resource, Api
 from flask import Blueprint
 
+from CTFd.utils import config
+from CTFd.utils.user import get_current_user, authed
+
 plugin_namespace = Namespace('feedback', description="Endpoint for challenge feedback")
 
 @plugin_namespace.route('')
-class CSRFToken(Resource):
+class Feedback(Resource):
     def get(self):
+        if not authed():
+            return {"message": "Unauthorized"}, 401
+        user = get_current_user()
+        if not user:
+            return {"message": "User not found"}, 404
         return {
-            "message": "Hello, world!"
+            "message": f"Hello {user.name}"
         }
+
+    def post(self):
+        if config.is_teams_mode():
+            # handle feedback for team
+            pass
+        else:
+            # handle feedback for individual user
+            pass
 
 def load(app):
     api = Blueprint("feedback_api", __name__, url_prefix="/api/v1")
