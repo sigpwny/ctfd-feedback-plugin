@@ -1,3 +1,4 @@
 {
-    "name": "Feedback Plugin"
+    "name": "Feedback Plugin",
+    "route": "/api/v1/feedback"
 }
